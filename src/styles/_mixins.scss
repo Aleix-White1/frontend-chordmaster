@@ -1,0 +1,86 @@
+@use './variables' as vars;
+
+// Mixin para botones
+@mixin button-base($bg-color: vars.$stone-brown, $text-color: vars.$fossil, $width: 50%) {
+  background-color: $bg-color;
+  color: $text-color;
+  padding: 0.6rem 2rem;
+  border: 1px solid vars.$stone-brown;
+  border-radius: 10px;
+  font-family: vars.$font-family;
+  font-size: 1.2rem;
+  cursor: pointer;
+  width: $width;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: vars.$cost-wold;
+    color: vars.$stone-brown;
+  }
+}
+
+// Mixin para inputs
+@mixin input-base {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: 10px;
+  background-color: vars.$stone-brown;
+  color: vars.$fossil;
+  font-family: vars.$font-family;
+  font-size: 1.2rem;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: vars.$stone-brown;
+    background-color: vars.$cost-wold;
+  }
+}
+
+// Mixin para contenedores de formulario
+@mixin form-container {
+  padding: 1rem;
+  min-width: 350px;
+}
+
+// Mixin para labels
+@mixin label-base {
+  display: block;
+  margin-bottom: 0.8rem;
+  color: vars.$stone-brown;
+  font-size: 1.3rem;
+}
+
+// Mixin para links
+@mixin link-base {
+  color: vars.$stone-brown;
+  text-decoration: none;
+  font-size: 0.9rem;
+
+  &:hover {
+    color: vars.$cost-wold;
+    text-decoration: underline;
+  }
+}
+
+// Mixin para centrado de logo
+@mixin logo-center($max-width: 200px) {
+  text-align: center;
+  margin-top: 2.5rem;
+
+  img {
+    max-width: $max-width;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+// Mixin para contenedor principal
+@mixin form-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: vars.$font-family;
+}

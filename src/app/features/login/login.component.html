@@ -1,0 +1,38 @@
+
+<div class="logoChord">
+  <img src="/ChordMaster.png" alt="ChordMaster Logo" />
+</div>
+<div class="formLogin">
+  <form (ngSubmit)="onSubmit()">
+    <div class="inputMail">
+      <label for="email">Enter email:</label>
+      <input
+        type="email"
+        id="email"
+        [(ngModel)]="email"
+        name="email"
+        placeholder="jonh.doe@example.com"
+        required
+      />
+      <!--  TODO: Hacer i18n trad. de los textos-->
+    </div>
+    <div class="inputPassword">
+      <label for="password">Enter password:</label>
+      <input
+        type="password"
+        id="password"
+        [(ngModel)]="password"
+        name="password"
+        placeholder="Enter your password"
+        required
+      />
+    </div>
+    <div class="inputSubmit">
+      <a href="/register">Sign Up</a><br>
+      <button type="submit">Login</button>
+    </div>
+  </form>
+</div>
+@if(isLoggedIn){
+<p>You are logged in as {{ email }}.</p>
+}@else { }

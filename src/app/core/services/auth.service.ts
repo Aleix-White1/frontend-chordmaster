@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../env/pre.env';
 import { HttpClient } from '@angular/common/http';
-import { catchError, from, switchMap, throwError } from 'rxjs';
+import { catchError, from, of, switchMap, throwError } from 'rxjs';
 import { Preferences } from '@capacitor/preferences';
 import {RegisterResponse} from '../models/auth-service.models';
 
@@ -51,7 +51,7 @@ export class AuthService {
 
   // Método para iniciar sesión
   login(username: string, password: string): void {
-    // Lógica de autenticación aquí
+    return {username, password} as any;
   }
 
   // Método para cerrar sesión

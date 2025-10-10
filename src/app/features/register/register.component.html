@@ -1,12 +1,26 @@
-<form (ngSubmit)="onSubmit()">
-  <label for="name">Name:</label>
-  <input type="text" id="name" [(ngModel)]="name" name="name" required>
+<div class="logoChord">
+  <img src="/ChordMaster.png" alt="ChordMaster Logo" />
+</div>
+<div class="formRegister">
+  <form (ngSubmit)="onSubmit()">
+    <div class="inputName">
+      <label for="name">Enter name:</label>
+      <input type="text" id="name" [(ngModel)]="name" name="name" placeholder="Enter your full name" required>
+    </div>
 
-  <label for="email">Email:</label>
-  <input type="email" id="email" [(ngModel)]="email" name="email" required>
+    <div class="inputEmail">
+      <label for="email">Enter email:</label>
+      <input type="email" id="email" [(ngModel)]="email" name="email" placeholder="jonh.doe@example.com" required>
+    </div>
 
-  <label for="password">Password:</label>
-  <input type="password" id="password" [(ngModel)]="password" name="password" required>
+    <div class="inputPassword">
+      <label for="password">Enter password:</label>
+      <input type="password" id="password" [(ngModel)]="password" name="password" placeholder="Enter your password" required>
+    </div>
 
-  <button type="submit">Register</button>
-</form>
+    <div class="inputSubmit">
+      <a href="/login">Sign In</a>
+      <button type="submit">Register</button>
+    </div>
+  </form>
+</div>

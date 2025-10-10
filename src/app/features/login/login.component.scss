@@ -1,9 +1,8 @@
 @use '../../../styles/variables' as vars;
 @use '../../../styles/mixins' as mix;
 
-.formRegister {
+.formLogin {
   @include mix.form-layout;
-  padding: 0;
 }
 
 .logoChord {
@@ -14,10 +13,9 @@ form {
   @include mix.form-container;
 }
 
-.inputName,
-.inputEmail,
+.inputMail,
 .inputPassword {
-  margin-bottom: 1rem;
+  margin-bottom: 1.8rem;
   text-align: left;
 }
 
@@ -25,7 +23,6 @@ label {
   @include mix.label-base;
 }
 
-input[type="text"],
 input[type="email"],
 input[type="password"] {
   @include mix.input-base;
@@ -34,6 +31,12 @@ input[type="password"] {
 .inputSubmit {
   text-align: center;
   margin-top: 1rem;
+  margin-bottom: 1rem;
+
+  button {
+    margin: 0.8rem;
+  }
+
 }
 
 button[type="submit"] {
@@ -42,7 +45,17 @@ button[type="submit"] {
 
 a {
   @include mix.link-base;
-  display: block;
   margin-bottom: 1rem;
   font-size: 1.2rem;
 }
+
+p {
+  color: vars.$stone-brown;
+  background-color: vars.$revere-pewter;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-top: 1rem;
+  border: 1px solid vars.$cost-wold;
+}
+
+
