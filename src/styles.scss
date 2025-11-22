@@ -1,17 +1,18 @@
-/* You can add global styles to this file, and also import other style files */
-@import './styles/variables';
+@use './styles/variables' as vars;
+@import url(https://db.onlinewebfonts.com/c/2aea0ac500c896188f9ad191c231029c?family=Orpheus+Pro);
+
 
 * {
-  font-family: $font-family;
+  font-family: vars.$font-family;
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: $fossil;
+  background-color: vars.$revere-pewter;
   background-image:
-    linear-gradient(rgba(231, 224, 208, 0.7), rgba(207, 200, 185, 0.7)),
-    url('../public/image.png');
+    //linear-gradient(rgba(231, 224, 208, 0.7), rgba(207, 200, 185, 0.7)),
+    url('../public/background.png');
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;

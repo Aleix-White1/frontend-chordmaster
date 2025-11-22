@@ -3,8 +3,14 @@
 
 .formRegister {
   @include mix.form-layout;
-  padding: 0;
 }
+
+.alert{
+  color: vars.$stone-brown;
+  font-size: 1rem;
+  margin-top: 0.4rem;
+}
+
 
 .logoChord {
   @include mix.logo-center(200px);

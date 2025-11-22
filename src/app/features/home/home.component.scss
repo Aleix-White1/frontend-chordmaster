@@ -1,0 +1,47 @@
+@use '../../../styles/variables' as vars;
+@use '../../../styles/mixins' as mix;
+
+.main-section__logo {
+  @include mix.logo-center(200px);
+}
+
+.main-section__p{
+  color: vars.$stone-brown;
+}
+
+.main-section__selector {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 5%;
+}
+
+.main-section__buttons{
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin-top: 5%;
+}
+.button-container{
+  width: 100%;
+}
+
+.main-section__button {
+  @include mix.shadow;
+  @include mix.onclick-button;
+  background-color: vars.$fossil;
+  border-color: vars.$stone-brown;
+  width: 65%;
+  border-radius: 25px;
+  border-width: 1px;
+  padding-left: 5%;
+  padding-right: 5%;
+  padding-top: 0%;
+  padding-bottom: 0%;
+  img {
+    width: 80px;
+    height: 80px;
+  }
+
+
+
+}

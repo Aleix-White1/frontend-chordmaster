@@ -1,0 +1,8 @@
+<div class="sidepanel" [class.open]="isOpen">
+  <div class="sidepanel__overlay" (click)="onClose()" (keydown)="onClose()"></div>
+  <div class="sidepanel__content">
+    <button class="sidepanel__close" (click)="onClose()">×</button>
+    <h1 class="sidepanel__title">History</h1>
+    <div class="divider-bar"></div>
+  </div>
+</div>

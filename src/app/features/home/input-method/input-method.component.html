@@ -1,0 +1,44 @@
+<app-header></app-header>
+
+<main class="main-section">
+  <div class="main-section__logo">
+    <img src="/ChordMaster.png" alt="ChordMaster Logo" />
+  </div>
+  @if (inputType === 'file') {
+  <div class="main-section__file-input">
+    <p class="main-section__p">> Select file from your device:</p>
+    <div class="file-input-container">
+      <input
+        type="text"
+        class="file-input-display"
+        [value]="selectedFileName"
+        placeholder="audio.mp3"
+        readonly
+      />
+      <label for="file-upload" class="file-input-button-inside"
+        >Select file</label
+      >
+    </div>
+    <input
+      id="file-upload"
+      type="file"
+      accept="audio/*"
+      (change)="onFileSelected($event)"
+      class="file-input-hidden"
+    />
+  </div>
+  } @else if (inputType === 'youtube') {
+
+  <div class="main-section__youtube-input">
+    <p class="main-section__p">> Enter Youtube link:</p>
+    <input
+      type="text"
+      class="youtube-input-field"
+      placeholder="https://www.youtube.com/..."
+    />
+  </div>
+
+  }
+  <button class="file-input-button">Analize</button>
+
+</main>

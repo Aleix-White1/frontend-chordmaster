@@ -1,67 +1,80 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../env/pre.env';
 import { HttpClient } from '@angular/common/http';
-import { catchError, from, of, switchMap, throwError } from 'rxjs';
+import { catchError, tap, throwError } from 'rxjs';
+import { RegisterResponse } from '../models/auth-service.models';
 import { Preferences } from '@capacitor/preferences';
-import {RegisterResponse} from '../models/auth-service.models';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class AuthService {
-  private readonly ACCESS_TOKEN_KEY = 'accessToken';
-  private readonly EMAIL_KEY = 'email';
-
   private readonly baseURL = environment.apiUrl;
 
   constructor(private readonly http: HttpClient) {}
 
-  async saveUserData(email: string, access_token: string) {
-    await Preferences.set({
-      key: this.EMAIL_KEY,
-      value: email
-    });
-    await Preferences.set({
-      key: this.ACCESS_TOKEN_KEY,
-      value: access_token
-    });
-  }
-
   register(name: string, email: string, password: string) {
     const requestBody = { name, email, password };
-    return this.http.post<RegisterResponse>(`${this.baseURL}/api/auth/register`, requestBody).pipe(
-      switchMap((response: RegisterResponse) => {
-        return from(this.saveUserData(response.email, response.access_token)).pipe(
-          switchMap(() => [response])
-        );
+    return this.http
+      .post<RegisterResponse>(`${this.baseURL}/api/auth/register`, requestBody)
+      .pipe(
+        tap((response: RegisterResponse) => {
+          this.setUserData(
+            response.user,
+            response.email,
+            response.access_token
+          );
+        }),
+        catchError((error) => {
+          console.error('Registration failed:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  login(email: string, password: string) {
+    const requestBody = { email, password };
+    return this.http.post(`${this.baseURL}/api/auth/login`, requestBody).pipe(
+      tap((response: any) => {
+        this.setUserData(response.user, response.email, response.access_token);
       }),
       catchError((error) => {
-        console.error('Registration failed:', error);
+        console.error('Login failed:', error);
         return throwError(() => error);
       })
     );
   }
 
   get userEmail(): Promise<string | null> {
-    return Preferences.get({ key: 'email' }).then(result => result.value);
+    return Promise.resolve(localStorage.getItem('email'));
   }
 
-
-
-  // Método para iniciar sesión
-  login(username: string, password: string): void {
-    return {username, password} as any;
+  get accessToken(): Promise<string | null> {
+    return Promise.resolve(localStorage.getItem('accessToken'));
   }
 
+  async setUserData(name: string, email: string, accessToken: string) {
+    await Preferences.set({ key: 'name', value: name });
+    await Preferences.set({ key: 'email', value: email });
+    await Preferences.set({ key: 'accessToken', value: accessToken });
+  }
+
+  async getUserData(): Promise<{
+    name: string | null;
+    email?: string | null;
+    accessToken?: string | null;
+  }> {
+    const name = await Preferences.get({ key: 'name' });
+    const email = await Preferences.get({ key: 'email' });
+    const accessToken = await Preferences.get({ key: 'accessToken' });
+    return {
+      name: name.value,
+      email: email.value,
+      accessToken: accessToken.value,
+    };
+  }
   // Método para cerrar sesión
   logout(): void {
     // Lógica de cierre de sesión aquí
-  }
-
-  // Método para verificar si el usuario está autenticado
-  isAuthenticated(): boolean {
-    // Lógica para comprobar autenticación
-    return false;
   }
 }

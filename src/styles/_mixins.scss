@@ -1,7 +1,11 @@
-@use './variables' as vars;
+@use "./variables" as vars;
 
 // Mixin para botones
-@mixin button-base($bg-color: vars.$stone-brown, $text-color: vars.$fossil, $width: 50%) {
+@mixin button-base(
+  $bg-color: vars.$stone-brown,
+  $text-color: vars.$fossil,
+  $width: 50%
+) {
   background-color: $bg-color;
   color: $text-color;
   padding: 0.6rem 2rem;
@@ -19,13 +23,18 @@
   }
 }
 
+@mixin shadow {
+  box-shadow: 0 2px 4px vars.$stone-brown;
+}
+
 // Mixin para inputs
 @mixin input-base {
   width: 100%;
   padding: 0.8rem;
   border-radius: 10px;
-  background-color: vars.$stone-brown;
-  color: vars.$fossil;
+  border: 1px solid vars.$stone-brown;
+  background-color: vars.$fossil;
+  color: vars.$stone-brown;
   font-family: vars.$font-family;
   font-size: 1.2rem;
   box-sizing: border-box;
@@ -74,6 +83,8 @@
     display: block;
     margin: 0 auto;
   }
+
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 }
 
 // Mixin para contenedor principal
@@ -83,4 +94,32 @@
   align-items: center;
   justify-content: center;
   font-family: vars.$font-family;
+}
+
+@mixin onclick-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+  }
+
+  &:active::after {
+    width: 200px;
+    height: 200px;
+  }
 }

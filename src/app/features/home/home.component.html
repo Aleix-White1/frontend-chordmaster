@@ -1,0 +1,27 @@
+<app-header></app-header>
+
+<main class="main-section">
+  <div class="main-section__logo">
+    <img src="/ChordMaster.png" alt="ChordMaster Logo" />
+  </div>
+  <div class="main-section__selector">
+    <p class="main-section__p">
+      > Choose one method, to start mastering:
+    </p>
+    <div class="main-section__buttons">
+      <div class="button-container">
+        <button class="main-section__button youtube" (click)="redirectPage('youtube')">
+          <img src="/btn-yt.png" alt="Youtube">
+        </button>
+        <p class="main-section__p">Youtube</p>
+      </div>
+      <div class="button-container">
+        <button class="main-section__button file" (click)="redirectPage('file')">
+          <img src="/btn-file.png" alt="File">
+        </button>
+        <p class="main-section__p">File</p>
+      </div>
+    </div>
+
+  </div>
+</main>
