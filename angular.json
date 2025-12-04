@@ -33,7 +33,8 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/ngx-spinner/animations/ball-clip-rotate.css"
             ],
             "scripts": []
           },
@@ -93,7 +94,9 @@
               }
             ],
             "styles": [
+              "node_modules/ngx-spinner/animations/ball-clip-rotate.css",
               "src/styles.scss"
+
             ],
             "scripts": []
           }

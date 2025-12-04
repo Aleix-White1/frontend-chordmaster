@@ -4,6 +4,7 @@ import { LoginComponent } from './features/login/login.component';
 import { HomeComponent } from './features/home/home.component';
 import { InputMethodComponent } from './features/home/input-method/input-method.component';
 import { AnalizerComponent } from './features/home/analizer/analizer.component';
+import { AuthGuard } from './core/guard/auth.guard';
 
 export const routes: Routes = [
   {
@@ -22,14 +23,17 @@ export const routes: Routes = [
   {
     path: 'home',
     component: HomeComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'input-method',
     component: InputMethodComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'analizer',
-    component: AnalizerComponent
+    component: AnalizerComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: '**',

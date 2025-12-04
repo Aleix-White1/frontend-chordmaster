@@ -13,7 +13,7 @@ export class AuthService {
 
   constructor(private readonly http: HttpClient) {}
 
-  register(name: string, email: string, password: string) {
+  public register(name: string, email: string, password: string) {
     const requestBody = { name, email, password };
     return this.http
       .post<RegisterResponse>(`${this.baseURL}/api/auth/register`, requestBody)
@@ -32,11 +32,12 @@ export class AuthService {
       );
   }
 
-  login(email: string, password: string) {
+  public login(email: string, password: string) {
     const requestBody = { email, password };
     return this.http.post(`${this.baseURL}/api/auth/login`, requestBody).pipe(
       tap((response: any) => {
-        this.setUserData(response.user, response.email, response.access_token);
+        console.log('AuthService login response:', response);
+        this.setUserData(response.name, response.email, response.access_token);
       }),
       catchError((error) => {
         console.error('Login failed:', error);
@@ -45,21 +46,26 @@ export class AuthService {
     );
   }
 
-  get userEmail(): Promise<string | null> {
+  public get userEmail(): Promise<string | null> {
     return Promise.resolve(localStorage.getItem('email'));
   }
 
-  get accessToken(): Promise<string | null> {
+  public get accessToken(): Promise<string | null> {
     return Promise.resolve(localStorage.getItem('accessToken'));
   }
 
-  async setUserData(name: string, email: string, accessToken: string) {
+  public async isLoggedIn(): Promise<boolean> {
+    const result = await Preferences.get({ key: 'accessToken' });
+    return !!result.value;
+  }
+
+  public async setUserData(name: string, email: string, accessToken: string) {
     await Preferences.set({ key: 'name', value: name });
     await Preferences.set({ key: 'email', value: email });
     await Preferences.set({ key: 'accessToken', value: accessToken });
   }
 
-  async getUserData(): Promise<{
+  public async getUserData(): Promise<{
     name: string | null;
     email?: string | null;
     accessToken?: string | null;
@@ -73,8 +79,10 @@ export class AuthService {
       accessToken: accessToken.value,
     };
   }
-  // Método para cerrar sesión
+
   logout(): void {
     // Lógica de cierre de sesión aquí
   }
+
+
 }

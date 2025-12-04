@@ -18,7 +18,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(private readonly authService: AuthService) {}
 
   ngOnInit() {
-    // Initialization logic will be added here if needed
+    this.authService.getUserData().then(userData => {
+      this.currentUser = userData.name ?? null;
+    });
   }
 
   ngOnDestroy() {

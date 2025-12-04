@@ -20,25 +20,31 @@ export class LoginComponent {
   private readonly routes = inject(Router);
 
   public onSubmit() {
-    console.log(this.email, this.password);
-
     this.authService.login(this.email, this.password).subscribe({
-      next: (response) => {
-        console.log('Login successful:', response.name);
+      next: () => {
         Swal.fire({
           icon: 'success',
           title: 'Login Successful',
+          background: '#e7e0d0',
           text: 'You have been logged in successfully!',
           timer: 2000,
+          showConfirmButton: false,
+        }).then(() => {
+          this.isLoggedIn = true;
+          this.routes.navigate(['/home']);
         });
-        this.routes.navigate(['/home']);
-        this.isLoggedIn = true;
       },
       error: (error) => {
         console.error('Login error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Login Failed',
+          text: 'Invalid email or password.',
+          timer: 2000,
+          customClass: {},
+        });
         this.isLoggedIn = false;
-      }
+      },
     });
   }
-
 }

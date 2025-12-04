@@ -4,6 +4,12 @@
   <div class="main-section__logo">
     <img src="/ChordMaster.png" alt="ChordMaster Logo" />
   </div>
+  <ngx-spinner
+    bdColor="rgba(0, 0, 0, 0.8)"
+    size="medium"
+    color="#fff"
+    type="ball-clip-rotate"
+  />
   @if (inputType === 'file') {
   <div class="main-section__file-input">
     <p class="main-section__p">> Select file from your device:</p>
@@ -32,6 +38,7 @@
   <div class="main-section__youtube-input">
     <p class="main-section__p">> Enter Youtube link:</p>
     <input
+      [formControl]="youtubeLink"
       type="text"
       class="youtube-input-field"
       placeholder="https://www.youtube.com/..."
@@ -39,6 +46,5 @@
   </div>
 
   }
-  <button class="file-input-button">Analize</button>
-
+  <button class="file-input-button" (click)="sendToAnalize()">Analize</button>
 </main>
