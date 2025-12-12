@@ -22,7 +22,8 @@ export interface AnalysisResult {
 }
 
 export interface HistoryItem {
-  song_id: string;
+  id?: number; // ID numérico principal
+  song_id?: string;
   user_id: number;
   title: string;
   source: string;

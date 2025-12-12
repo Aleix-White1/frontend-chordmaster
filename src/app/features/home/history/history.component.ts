@@ -103,14 +103,22 @@ export class HistoryComponent implements OnInit, OnDestroy {
 
     console.log('🗑️ Attempting to delete item:', item);
     console.log('📋 Item properties:', {
+      id: (item as any).id,
       song_id: item.song_id,
       job_id: item.job_id,
       title: item.title,
       allProperties: Object.keys(item)
     });
 
-    // Determinar qué ID usar (puede que el campo sea diferente)
-    const itemId = item.song_id || item.job_id || (item as any).id;
+    // Intentar primero con el ID numérico, luego job_id
+    const itemId = (item as any).id || item.job_id || item.song_id;
+    console.log('🔍 Selected ID for deletion (trying numeric id first):', {
+      selectedId: itemId,
+      type: typeof itemId,
+      numericId: (item as any).id,
+      jobId: item.job_id,
+      songId: item.song_id
+    });
 
     if (!itemId) {
       console.error('❌ No valid ID found for item:', item);
@@ -160,7 +168,7 @@ export class HistoryComponent implements OnInit, OnDestroy {
             next: () => {
               console.log('✅ Item deleted successfully');
               this.historyItems = this.historyItems.filter((h) =>
-                (h.song_id || h.job_id || (h as any).id) !== itemId
+                ((h as any).id || h.job_id || h.song_id) !== itemId
               );
 
               // Mostrar confirmación de eliminación exitosa
@@ -212,7 +220,7 @@ export class HistoryComponent implements OnInit, OnDestroy {
     });
   }
 
-  public trackBySongId(index: number, item: HistoryItem): string {
-    return item.song_id || item.job_id || (item as any).id || index.toString();
+  public trackByFn(index: number, item: HistoryItem): string {
+    return (item as any).id?.toString() || item.job_id || item.song_id || index.toString();
   }
 }

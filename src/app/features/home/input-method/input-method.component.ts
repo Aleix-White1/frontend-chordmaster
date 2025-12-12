@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../../shared/header/header.component';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,7 +11,7 @@ import {NgxSpinnerModule, NgxSpinnerService}  from "ngx-spinner";
 @Component({
   selector: 'app-input-method',
   standalone: true,
-  imports: [HeaderComponent, FormsModule, ReactiveFormsModule, NgxSpinnerModule],
+  imports: [CommonModule, HeaderComponent, FormsModule, ReactiveFormsModule, NgxSpinnerModule],
   templateUrl: './input-method.component.html',
   styleUrls: ['./input-method.component.scss']
 })
@@ -44,6 +45,10 @@ export class InputMethodComponent implements OnInit, OnDestroy {
   public setInputType(type: string): void {
 
     this.inputType = type;
+  }
+
+  public clearYoutubeLink(): void {
+    this.youtubeLink.setValue('');
   }
 
   public onFileSelected(event: Event): void {
@@ -87,15 +92,19 @@ export class InputMethodComponent implements OnInit, OnDestroy {
     this.analizerService.analyzeLink(url as string).subscribe({
       next: (response) => {
         console.log('✅ Analysis response:', response);
+        console.log('🎵 Title from API:', response.title);
+        console.log('🎵 Title type:', typeof response.title);
+        console.log('🎵 Title length:', response.title?.length);
+
         const analysisData = {
           key: response.analysis.key,
           tempo_bpm: response.analysis.tempo_bpm,
           chords: response.analysis.chords,
-          title: response.analysis.title || 'Análisis de Audio',
+          title: response.title || 'Análisis de Audio',
           job_id: response.job_id
         };
 
-        // Establecer datos de análisis
+        console.log('🎵 Final title used:', analysisData.title);        // Establecer datos de análisis
         this.analizerService.setAnalysisData(analysisData);
 
         // El backend guarda automáticamente en el historial
@@ -145,15 +154,19 @@ export class InputMethodComponent implements OnInit, OnDestroy {
     this.analizerService.analizeFile(selectedFile).subscribe({
       next: (response) => {
         console.log('✅ File Analysis response:', response);
+        console.log('🎵 File Title from API:', response.title);
+        console.log('🎵 File Title type:', typeof response.title);
+        console.log('🎵 File Title length:', response.title?.length);
+
         const analysisData = {
           key: response.analysis.key,
           tempo_bpm: response.analysis.tempo_bpm,
           chords: response.analysis.chords,
-          title: response.analysis.title || selectedFile.name || 'Análisis de Archivo',
+          title: response.title || selectedFile.name || 'Análisis de Archivo',
           job_id: response.job_id
         };
 
-        // Establecer datos de análisis
+        console.log('🎵 Final file title used:', analysisData.title);        // Establecer datos de análisis
         this.analizerService.setAnalysisData(analysisData);
 
         // El backend guarda automáticamente en el historial

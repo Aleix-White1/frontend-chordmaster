@@ -2,15 +2,15 @@
   <img src="/ChordMaster.png" alt="ChordMaster Logo" />
 </div>
 <div class="formRegister">
-  <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
     <div class="inputName">
       <label for="name">Enter name:</label>
-      <input type="text" id="name" [(ngModel)]="name" name="name" #nameForm="ngModel" minlength="4" placeholder="Enter your full name" required>
-      <div class="alert" *ngIf="nameForm?.invalid && (nameForm?.dirty || nameForm?.touched)">
-          <div *ngIf="nameForm?.errors?.['required']">
+      <input type="text" id="name" formControlName="name" placeholder="Enter your full name">
+      <div class="alert" *ngIf="nameControl?.invalid && (nameControl?.dirty || nameControl?.touched)">
+          <div *ngIf="nameControl?.errors?.['required']">
             Name is required.
           </div>
-          <div *ngIf="nameForm?.errors?.['minlength']">
+          <div *ngIf="nameControl?.errors?.['minlength']">
             Name must be at least 4 characters long.
           </div>
         </div>
@@ -18,12 +18,12 @@
 
     <div class="inputEmail">
       <label for="email">Enter email:</label>
-      <input type="email" id="email" [(ngModel)]="email" name="email" #emailFormCtrl="ngModel" placeholder="jonh.doe@example.com" required>
-      <div class="alert" *ngIf="emailFormCtrl?.invalid && (emailFormCtrl?.dirty || emailFormCtrl?.touched)">
-        <div *ngIf="emailFormCtrl?.errors?.['required']">
+      <input type="email" id="email" formControlName="email" placeholder="jonh.doe@example.com">
+      <div class="alert" *ngIf="emailControl?.invalid && (emailControl?.dirty || emailControl?.touched)">
+        <div *ngIf="emailControl?.errors?.['required']">
             Email is required.
           </div>
-          <div *ngIf="emailFormCtrl?.errors?.['email']">
+          <div *ngIf="emailControl?.errors?.['email']">
             Please enter a valid email address.
           </div>
         </div>
@@ -31,12 +31,12 @@
 
     <div class="inputPassword">
       <label for="password">Enter password:</label>
-      <input type="password" id="password" [(ngModel)]="password" name="password" #passwordFormCtrl="ngModel" minlength="6" placeholder="Enter your password" required>
-      <div class="alert" *ngIf="passwordFormCtrl?.invalid && (passwordFormCtrl?.dirty || passwordFormCtrl?.touched)">
-          <div *ngIf="passwordFormCtrl?.errors?.['required']">
+      <input type="password" id="password" formControlName="password" placeholder="Enter your password">
+      <div class="alert" *ngIf="passwordControl?.invalid && (passwordControl?.dirty || passwordControl?.touched)">
+          <div *ngIf="passwordControl?.errors?.['required']">
             Password is required.
           </div>
-          <div *ngIf="passwordFormCtrl?.errors?.['minlength']">
+          <div *ngIf="passwordControl?.errors?.['minlength']">
             Password must be at least 6 characters long.
           </div>
         </div>
@@ -44,7 +44,7 @@
 
     <div class="inputSubmit">
       <a href="/login">Sign In</a>
-      <button type="submit">Register</button>
+      <button type="submit" [disabled]="!registerForm.valid">Register</button>
     </div>
   </form>
 </div>

@@ -15,7 +15,30 @@
       </span>
     </div>
   </div>
+<!-- Lista horizontal de todos los acordes -->
+  <div class="chords-timeline-section" *ngIf="chords && chords.length > 0">
+    <div class="chords-timeline" #chordsTimelineContainer>
+      <button
+        *ngFor="let chord of chords; trackBy: trackByChord"
+        class="chord-item"
+        [class.current]="isCurrentChord(chord)"
+        [class.active]="isActiveChord(chord)"
+        [class.past]="isPastChord(chord)"
+        [class.future]="isFutureChord(chord)"
+        (click)="seekToChord(chord)"
+        [attr.aria-label]="'Reproducir acorde ' + chord.chord + ' en tiempo ' + formatTime(chord.start_time)"
+        type="button">
 
+        <div class="chord-name">{{ chord.chord }}</div>
+        <div class="chord-timing">
+          {{ formatTime(chord.start_time) }} - {{ formatTime(chord.end_time) }}
+        </div>
+        <div class="chord-bar" *ngIf="chord.bar">
+          Barra {{ chord.bar }}
+        </div>
+      </button>
+    </div>
+  </div>
   <!-- Reproductor de audio con waveform -->
   <div class="audio-player-section">
     <div class="waveform-container">
@@ -64,31 +87,5 @@
     </div>
   </div>
 
-  <!-- Lista horizontal de todos los acordes -->
-  <div class="chords-timeline-section" *ngIf="chords && chords.length > 0">
-    <h3 class="timeline-title">
-      <i class="fas fa-music"></i>
-      Secuencia de Acordes
-    </h3>
-    <div class="chords-timeline" #chordsTimelineContainer>
-      <button
-        *ngFor="let chord of chords; trackBy: trackByChord"
-        class="chord-item"
-        [class.current]="isCurrentChord(chord)"
-        [class.active]="isActiveChord(chord)"
-        [class.past]="isPastChord(chord)"
-        [class.future]="isFutureChord(chord)"
-        (click)="seekToChord(chord)"
-        [attr.aria-label]="'Reproducir acorde ' + chord.chord + ' en tiempo ' + formatTime(chord.start_time)"
-        type="button">
 
-        <div class="chord-name">{{ chord.chord }}</div>
-        <div class="chord-timing">
-          {{ formatTime(chord.start_time) }} - {{ formatTime(chord.end_time) }}
-        </div>
-        <div class="chord-bar" *ngIf="chord.bar">
-          Barra {{ chord.bar }}
-        </div>
-      </button>
-    </div>
-  </div>
+

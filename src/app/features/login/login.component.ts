@@ -27,11 +27,16 @@ export class LoginComponent {
         setTimeout(async () => {
           Swal.fire({
             icon: 'success',
-            title: 'Login Successful',
-            background: '#e7e0d0',
-            text: 'You have been logged in successfully!',
-            timer: 2000,
+            title: '🎵 ¡Bienvenido a ChordMaster!',
+            html: '¡Listo para analizar tus canciones favoritas!<br><strong>🎼 Encuentra los acordes perfectos 🎼</strong>',
+            background: '#e7e0d0', // fossil
+            color: '#675a4f', // stone-brown
+            confirmButtonColor: '#675a4f',
+            timer: 2500,
             showConfirmButton: false,
+            customClass: {
+              popup: 'custom-swal-popup'
+            }
           }).then(async () => {
             this.isLoggedIn = true;
             // Verificar que el usuario está logueado antes de navegar
@@ -49,10 +54,16 @@ export class LoginComponent {
         console.error('Login error:', error);
         Swal.fire({
           icon: 'error',
-          title: 'Login Failed',
-          text: 'Invalid email or password.',
-          timer: 2000,
-          customClass: {},
+          title: '🎵 Acorde Desafinado',
+          html: 'Las credenciales no suenan bien...<br><strong>Verifica tu email y contraseña</strong>',
+          background: '#e7e0d0', // fossil
+          color: '#675a4f', // stone-brown
+          confirmButtonColor: '#d73527', // error red
+          confirmButtonText: 'Intentar de Nuevo',
+          customClass: {
+            popup: 'custom-swal-popup',
+            confirmButton: 'custom-swal-error'
+          }
         });
         this.isLoggedIn = false;
       },

@@ -37,12 +37,23 @@
 
   <div class="main-section__youtube-input">
     <p class="main-section__p">> Enter Youtube link:</p>
-    <input
-      [formControl]="youtubeLink"
-      type="text"
-      class="youtube-input-field"
-      placeholder="https://www.youtube.com/..."
-    />
+    <div class="youtube-input-container">
+      <input
+        [formControl]="youtubeLink"
+        type="text"
+        class="youtube-input-field"
+        placeholder="https://www.youtube.com/..."
+      />
+      <button
+        *ngIf="youtubeLink.value && youtubeLink.value.trim() !== ''"
+        type="button"
+        class="youtube-clear-button"
+        (click)="clearYoutubeLink()"
+        aria-label="Limpiar enlace"
+        title="Limpiar enlace">
+        ✕
+      </button>
+    </div>
   </div>
 
   }

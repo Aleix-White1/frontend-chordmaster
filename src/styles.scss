@@ -4,6 +4,23 @@
 
 * {
   font-family: vars.$font-family;
+
+  // Eliminar outline azul y highlights táctiles
+  &:focus,
+  &:focus-visible,
+  &:active,
+  &:focus-within {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  // Eliminar highlight táctil en móviles
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
 }
 
 body {
@@ -17,5 +34,51 @@ body {
   background-position: center center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+}
+
+// Eliminar outline específicamente en elementos interactivos
+button,
+input,
+textarea,
+select,
+a,
+div,
+span,
+[tabindex],
+[role="button"],
+.btn,
+.form-control,
+.history-item,
+.delete-btn,
+.custom-btn {
+  &:focus,
+  &:focus-visible,
+  &:active,
+  &:hover:focus,
+  &:focus-within {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: inherit !important;
+  }
+}
+
+// Eliminar específicamente el outline azul de WebKit/Blink
+*:focus {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-focus-ring-color: transparent !important;
+}
+
+// Permitir selección de texto en inputs y textos
+input,
+textarea,
+[contenteditable],
+p,
+span,
+h1, h2, h3, h4, h5, h6 {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
 }
 

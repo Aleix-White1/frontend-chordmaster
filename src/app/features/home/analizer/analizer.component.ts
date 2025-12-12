@@ -65,6 +65,7 @@ export class AnalizerComponent implements OnInit, OnDestroy, AfterViewInit {
           this.analysisData = data;
           this.tone = data.key || 'Desconocido';
           this.tempo = data.tempo_bpm ? Math.round(data.tempo_bpm) : undefined;
+          console.log('🎵 Title received in analizer:', data.title);
           this.title = data.title || 'Análisis de Audio';
 
           // Validar que los acordes sean un array

@@ -67,9 +67,48 @@
   margin: 0% 7% 0 7%;
 }
 
+.youtube-input-container {
+  position: relative;
+  max-width: 400px;
+  width: 100%;
+}
+
 .youtube-input-field {
   @include mix.input-base;
   padding: 10px;
+  padding-right: 45px;
+  width: 100%;
+}
+
+.youtube-clear-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: vars.$stone-brown;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  &:hover {
+    background-color: rgba(vars.$stone-brown, 0.1);
+    color: vars.$fossil;
+  }
+
+  &:focus {
+    outline: 2px solid vars.$cost-wold;
+    outline-offset: 2px;
+  }
 }
 
 
