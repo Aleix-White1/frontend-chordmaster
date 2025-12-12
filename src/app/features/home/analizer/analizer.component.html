@@ -1,37 +1,94 @@
 <app-header></app-header>
 
-<main>
-  <div class="main-section__specs">
-    <div class="main-section__title">
-      <p>
-        Title: <br />
-        Amazing Song
-      </p>
-    </div>
-    <div class="main-section__tone-tempo">
-      <p >Tone: {{tone}} <br />Tempo: {{tempo}} BPM</p>
-    </div>
-  </div>
-  <div class="main-player">
-    <button class="main-player__skip-backward" aria-label="Skip Backward">
-      <img src="/skip-backward.png" alt="Skip Backward" />
-    </button>
-    <button class="main-player__play-pause" aria-label="Play/Pause">
-      <img src="/play-btn.png" alt="Play/Pause" />
-    </button>
-    <button class="main-player__skip-forward" aria-label="Skip Forward">
-      <img src="/skip-forward.png" alt="Skip Forward" />
-    </button>
-  </div>
-  <div class="main-boxes">
-    <div class="main-boxes__side">
-      <p class="main-section__p">C</p>
-    </div>
-    <div class="main-boxes__big">
-      <p class="main-section__p">Am</p>
-    </div>
-    <div class="main-boxes__side">
-      <p class="main-section__p">F</p>
+<div class="analizer-container">
+  <!-- Información del análisis -->
+  <div class="analysis-header">
+    <h1 class="analysis-title">{{ title }}</h1>
+    <div class="analysis-summary">
+      <span class="key-info">
+        <i class="fas fa-music"></i>
+        Tonalidad: <strong>{{ tone }}</strong>
+      </span>
+      <span class="tempo-info" *ngIf="tempo">
+        <i class="fas fa-metronome"></i>
+        Tempo: <strong>{{ tempo }} BPM</strong>
+      </span>
     </div>
   </div>
-</main>
+
+  <!-- Reproductor de audio con waveform -->
+  <div class="audio-player-section">
+    <div class="waveform-container">
+      <div #waveformContainer class="waveform"></div>
+    </div>
+
+    <div class="player-controls">
+      <button
+        class="skip-btn skip-backward"
+        (click)="skipBackward()"
+        [disabled]="!isWaveSurferReady"
+        title="Retroceder 15 segundos">
+        <img src="/skip-backward.png" alt="Retroceder">
+        <span class="skip-time">15s</span>
+      </button>
+
+      <button
+        class="play-pause-btn"
+        (click)="togglePlayPause()"
+        [disabled]="!isWaveSurferReady">
+        <img [src]="isPlaying ? '/pause-btn.png' : '/play-btn.png'"
+             [alt]="isPlaying ? 'Pausar' : 'Reproducir'">
+      </button>
+
+      <button
+        class="skip-btn skip-forward"
+        (click)="skipForward()"
+        [disabled]="!isWaveSurferReady"
+        title="Adelantar 15 segundos">
+        <img src="/skip-forward.png" alt="Adelantar">
+        <span class="skip-time">15s</span>
+      </button>
+
+      <div class="time-info">
+        <span class="current-time">{{ formatTime(currentTime) }}</span>
+        <span class="separator">/</span>
+        <span class="total-time">{{ formatTime(duration) }}</span>
+      </div>
+
+      <div class="progress-bar" (click)="onProgressBarClick($event)">
+        <div
+          class="progress-fill"
+          [style.width.%]="getCurrentProgress()">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista horizontal de todos los acordes -->
+  <div class="chords-timeline-section" *ngIf="chords && chords.length > 0">
+    <h3 class="timeline-title">
+      <i class="fas fa-music"></i>
+      Secuencia de Acordes
+    </h3>
+    <div class="chords-timeline" #chordsTimelineContainer>
+      <button
+        *ngFor="let chord of chords; trackBy: trackByChord"
+        class="chord-item"
+        [class.current]="isCurrentChord(chord)"
+        [class.active]="isActiveChord(chord)"
+        [class.past]="isPastChord(chord)"
+        [class.future]="isFutureChord(chord)"
+        (click)="seekToChord(chord)"
+        [attr.aria-label]="'Reproducir acorde ' + chord.chord + ' en tiempo ' + formatTime(chord.start_time)"
+        type="button">
+
+        <div class="chord-name">{{ chord.chord }}</div>
+        <div class="chord-timing">
+          {{ formatTime(chord.start_time) }} - {{ formatTime(chord.end_time) }}
+        </div>
+        <div class="chord-bar" *ngIf="chord.bar">
+          Barra {{ chord.bar }}
+        </div>
+      </button>
+    </div>
+  </div>

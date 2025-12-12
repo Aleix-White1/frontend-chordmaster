@@ -5,9 +5,10 @@ import { SidepanelComponent } from '../sidepanel/sidepanel.component';
 
 @Component({
   selector: 'app-header',
+  standalone: true,
   imports: [SidepanelComponent],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 

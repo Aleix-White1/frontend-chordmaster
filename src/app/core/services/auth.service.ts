@@ -22,7 +22,8 @@ export class AuthService {
           this.setUserData(
             response.user,
             response.email,
-            response.access_token
+            response.access_token,
+            response.refresh_token
           );
         }),
         catchError((error) => {
@@ -37,7 +38,9 @@ export class AuthService {
     return this.http.post(`${this.baseURL}/api/auth/login`, requestBody).pipe(
       tap((response: any) => {
         console.log('AuthService login response:', response);
-        this.setUserData(response.name, response.email, response.access_token);
+        console.log('Response has refresh_token:', !!response.refresh_token);
+        console.log('Response has access_token:', !!response.access_token);
+        this.setUserData(response.name, response.email, response.access_token, response.refresh_token);
       }),
       catchError((error) => {
         console.error('Login failed:', error);
@@ -50,19 +53,43 @@ export class AuthService {
     return Promise.resolve(localStorage.getItem('email'));
   }
 
-  public get accessToken(): Promise<string | null> {
-    return Promise.resolve(localStorage.getItem('accessToken'));
+  public async getAccessToken(): Promise<string | null> {
+    const result = await Preferences.get({ key: 'accessToken' });
+    console.log('🔑 AuthService.getAccessToken:', {
+      hasToken: !!result.value,
+      tokenLength: result.value?.length || 0,
+      tokenPreview: result.value ? result.value.substring(0, 20) + '...' : null
+    });
+    return result.value;
   }
 
   public async isLoggedIn(): Promise<boolean> {
     const result = await Preferences.get({ key: 'accessToken' });
+    console.log('🔑 AuthService.isLoggedIn():', {
+      hasToken: !!result.value,
+      tokenLength: result.value?.length || 0,
+      tokenPreview: result.value ? result.value.substring(0, 20) + '...' : null
+    });
     return !!result.value;
   }
 
-  public async setUserData(name: string, email: string, accessToken: string) {
+  public async setUserData(name: string, email: string, accessToken: string, refreshToken?: string) {
+    console.log('💾 Saving user data:', {
+      name,
+      email,
+      hasAccessToken: !!accessToken,
+      hasRefreshToken: !!refreshToken
+    });
+
     await Preferences.set({ key: 'name', value: name });
     await Preferences.set({ key: 'email', value: email });
     await Preferences.set({ key: 'accessToken', value: accessToken });
+    if (refreshToken) {
+      await Preferences.set({ key: 'refreshToken', value: refreshToken });
+      console.log('✅ Refresh token saved successfully');
+    } else {
+      console.log('⚠️ No refresh token provided');
+    }
   }
 
   public async getUserData(): Promise<{
@@ -80,8 +107,41 @@ export class AuthService {
     };
   }
 
-  logout(): void {
-    // Lógica de cierre de sesión aquí
+  public async logout(): Promise<void> {
+    try {
+      // Limpiar todas las claves de Preferences
+      await Preferences.clear();
+      console.log('User logged out successfully');
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  }
+
+  public async debugTokens(): Promise<void> {
+    const accessToken = await Preferences.get({ key: 'accessToken' });
+    const refreshToken = await Preferences.get({ key: 'refreshToken' });
+    const userData = await this.getUserData();
+
+    console.log('=== AUTH DEBUG ===');
+    console.log('Access Token:', accessToken.value ? 'EXISTS' : 'MISSING');
+    console.log('Access Token length:', accessToken.value?.length || 0);
+    console.log('Access Token preview:', accessToken.value ? accessToken.value.substring(0, 50) + '...' : 'null');
+    console.log('Refresh Token:', refreshToken.value ? 'EXISTS' : 'MISSING');
+    console.log('Refresh Token length:', refreshToken.value?.length || 0);
+    console.log('User Data:', userData);
+    console.log('=================');
+  }
+
+  public async checkAuthStatus(): Promise<void> {
+    const isLoggedIn = await this.isLoggedIn();
+    const userData = await this.getUserData();
+
+    console.log('🔍 AUTHENTICATION STATUS CHECK 🔍');
+    console.log('Is Logged In:', isLoggedIn);
+    console.log('Has User Data:', !!userData.name);
+    console.log('Has Access Token:', !!userData.accessToken);
+    console.log('Token Valid Length:', userData.accessToken ? userData.accessToken.length > 20 : false);
+    console.log('=================================');
   }
 
 

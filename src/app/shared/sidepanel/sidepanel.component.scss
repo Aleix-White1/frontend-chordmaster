@@ -71,3 +71,41 @@
   margin-top: 10px;
   margin-bottom: 20px;
 }
+
+.menu-items {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 20px;
+  background: rgba(139, 69, 19, 0.1);
+  border-radius: 10px;
+  color: vars.$stone-brown;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+
+  i {
+    font-size: 1.3rem;
+    width: 25px;
+    text-align: center;
+  }
+
+  &:hover {
+    background: vars.$stone-brown;
+    color: vars.$fossil;
+    transform: translateX(5px);
+    border-color: vars.$stone-brown;
+  }
+
+  &:active {
+    transform: translateX(3px);
+  }
+}

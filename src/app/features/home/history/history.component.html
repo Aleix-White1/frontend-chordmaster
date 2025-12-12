@@ -1,0 +1,17 @@
+<div class="history-container">
+  <div class="history-list" *ngIf="!isLoading && !errorMessage && historyItems.length > 0">
+    <div class="history-item" *ngFor="let item of historyItems; trackBy: trackBySongId" (click)="loadSong(item)" (keydown)="$event.key === 'Enter' && loadSong(item)">
+
+      <div class="item-header">
+        <div class="item-info">
+          <h4 class="item-title">{{ item.title }}</h4>
+          <span class="item-key">{{ item.key }}</span>
+        </div>
+        <button class="delete-btn" (click)="deleteItem(item, $event)" type="button">
+          ×
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

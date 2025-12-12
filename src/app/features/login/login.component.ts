@@ -9,7 +9,8 @@ import Swal from 'sweetalert2';
   selector: 'app-login',
   imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
+  styleUrls: ['./login.component.scss'],
+  standalone: true
 })
 export class LoginComponent {
   public email: string = '';
@@ -22,17 +23,27 @@ export class LoginComponent {
   public onSubmit() {
     this.authService.login(this.email, this.password).subscribe({
       next: () => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Login Successful',
-          background: '#e7e0d0',
-          text: 'You have been logged in successfully!',
-          timer: 2000,
-          showConfirmButton: false,
-        }).then(() => {
-          this.isLoggedIn = true;
-          this.routes.navigate(['/home']);
-        });
+        // Esperar un poco para asegurar que los datos se guarden
+        setTimeout(async () => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Login Successful',
+            background: '#e7e0d0',
+            text: 'You have been logged in successfully!',
+            timer: 2000,
+            showConfirmButton: false,
+          }).then(async () => {
+            this.isLoggedIn = true;
+            // Verificar que el usuario está logueado antes de navegar
+            const isLoggedIn = await this.authService.isLoggedIn();
+            console.log('🔍 User logged in status:', isLoggedIn);
+            if (isLoggedIn) {
+              this.routes.navigate(['/home']);
+            } else {
+              console.error('❌ Token not found after login');
+            }
+          });
+        }, 100);
       },
       error: (error) => {
         console.error('Login error:', error);
