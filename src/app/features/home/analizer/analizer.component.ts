@@ -5,6 +5,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import WaveSurfer from 'wavesurfer.js';
 import { Subject, takeUntil } from 'rxjs';
+import { environment } from '../../../../env/pre.env';
 
 @Component({
   selector: 'app-analizer',
@@ -37,6 +38,7 @@ export class AnalizerComponent implements OnInit, OnDestroy, AfterViewInit {
   public wavesurfer: WaveSurfer | null = null;
   public audioUrl: string = '';
   public isWaveSurferReady: boolean = false;
+  private isInitializing: boolean = false;
 
   // Control de componente
   private readonly destroy$ = new Subject<void>();
@@ -96,8 +98,8 @@ export class AnalizerComponent implements OnInit, OnDestroy, AfterViewInit {
 
           // Si tenemos un job_id, construir la URL del audio
           if (data.job_id) {
-            // Probar diferentes rutas de audio
-            this.audioUrl = `http://localhost:8000/api/analyze/audio/${data.job_id}`;
+            // Construir URL del audio con el prefijo /api correcto
+            this.audioUrl = `${environment.apiUrl}/api/analyze/audio/${data.job_id}`;
             console.log('🎵 Audio URL constructed:', this.audioUrl);
 
             // Forzar la re-inicialización de WaveSurfer
@@ -115,9 +117,18 @@ export class AnalizerComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    console.log('🔄 ngAfterViewInit called');
+    console.log('  - analysisData exists:', !!this.analysisData);
+    console.log('  - job_id exists:', !!this.analysisData?.job_id);
+    console.log('  - audioUrl:', this.audioUrl);
+    console.log('  - waveformContainer exists:', !!this.waveformContainer);
+
     // Si ya tenemos datos cuando se inicializa la vista, inicializar WaveSurfer
     if (this.analysisData?.job_id) {
+      console.log('✅ Calling initializeWaveSurferIfReady from ngAfterViewInit');
       this.initializeWaveSurferIfReady();
+    } else {
+      console.log('❌ Not initializing WaveSurfer - no analysis data or job_id');
     }
   }
 
@@ -139,8 +150,9 @@ export class AnalizerComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log('  - Container:', !!this.waveformContainer?.nativeElement);
     console.log('  - Audio URL:', this.audioUrl);
     console.log('  - WaveSurfer exists:', !!this.wavesurfer);
+    console.log('  - Is initializing:', this.isInitializing);
 
-    if (this.waveformContainer?.nativeElement && this.audioUrl && !this.wavesurfer) {
+    if (this.waveformContainer?.nativeElement && this.audioUrl && !this.wavesurfer && !this.isInitializing) {
       // Asegurar que el contenedor tenga dimensiones
       const container = this.waveformContainer.nativeElement;
       console.log('  - Container dimensions:', container.offsetWidth, 'x', container.offsetHeight);
@@ -159,6 +171,14 @@ export class AnalizerComponent implements OnInit, OnDestroy, AfterViewInit {
   private async initializeWaveSurfer(): Promise<void> {
     console.log('🎼 Creating WaveSurfer instance...');
 
+    // Prevenir múltiples inicializaciones simultáneas
+    if (this.isInitializing) {
+      console.log('⚠️ WaveSurfer initialization already in progress, skipping');
+      return;
+    }
+
+    this.isInitializing = true;
+
     // Destruir instancia anterior si existe
     if (this.wavesurfer) {
       console.log('🗑️ Destroying previous WaveSurfer instance');
@@ -171,6 +191,10 @@ export class AnalizerComponent implements OnInit, OnDestroy, AfterViewInit {
       console.log('🔑 Using auth token:', token ? 'Token present' : 'No token');
 
       // Crear nueva instancia de WaveSurfer
+      console.log('🎶 Creating WaveSurfer with URL:', this.audioUrl);
+      console.log('🎶 Container element:', this.waveformContainer.nativeElement);
+      console.log('🎶 Container dimensions:', this.waveformContainer.nativeElement.offsetWidth, 'x', this.waveformContainer.nativeElement.offsetHeight);
+
       this.wavesurfer = WaveSurfer.create({
         container: this.waveformContainer.nativeElement,
         waveColor: '#8B4513',
@@ -186,7 +210,6 @@ export class AnalizerComponent implements OnInit, OnDestroy, AfterViewInit {
         hideScrollbar: false,
         url: this.audioUrl,
         fetchParams: {
-          credentials: 'include',
           headers: token ? {
             'Authorization': `Bearer ${token}`
           } : {}
@@ -196,6 +219,10 @@ export class AnalizerComponent implements OnInit, OnDestroy, AfterViewInit {
       console.log('✅ WaveSurfer instance created successfully');
 
       // Eventos de WaveSurfer (actualizan el estado dentro del NgZone)
+      this.wavesurfer.on('loading', (percent) => {
+        console.log('📥 WaveSurfer loading:', percent + '%');
+      });
+
       this.wavesurfer.on('ready', () => {
         console.log('🎉 WaveSurfer ready event fired');
         this.ngZone.run(() => {
@@ -229,10 +256,13 @@ export class AnalizerComponent implements OnInit, OnDestroy, AfterViewInit {
         console.error('❌ WaveSurfer error:', error);
         this.ngZone.run(() => {
           this.isWaveSurferReady = false;
-          // Reintentar carga después de un error
+          this.isInitializing = false; // Reset flag on error
+          // Reintentar carga después de un error solo si no está ya inicializando
           setTimeout(async () => {
-            console.log('🔄 Retrying WaveSurfer initialization after error...');
-            await this.initializeWaveSurfer();
+            if (!this.isInitializing && !this.wavesurfer) {
+              console.log('🔄 Retrying WaveSurfer initialization after error...');
+              await this.initializeWaveSurfer();
+            }
           }, 2000);
         });
       });
@@ -257,6 +287,8 @@ export class AnalizerComponent implements OnInit, OnDestroy, AfterViewInit {
 
     } catch (error) {
       console.error('❌ Error creating WaveSurfer:', error);
+    } finally {
+      this.isInitializing = false;
     }
   }
 
@@ -426,6 +458,7 @@ export class AnalizerComponent implements OnInit, OnDestroy, AfterViewInit {
     this.chords = [];
     this.audioUrl = '';
     this.isWaveSurferReady = false;
+    this.isInitializing = false;
 
     if (this.wavesurfer) {
       this.wavesurfer.destroy();

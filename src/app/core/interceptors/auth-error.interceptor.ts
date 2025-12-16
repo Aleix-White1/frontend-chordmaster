@@ -4,6 +4,7 @@ import { Observable, throwError, BehaviorSubject, filter, take, switchMap, catch
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { Preferences } from '@capacitor/preferences';
+import { environment } from '../../../env/pre.env';
 
 @Injectable()
 export class AuthErrorInterceptor implements HttpInterceptor {
@@ -104,7 +105,7 @@ export class AuthErrorInterceptor implements HttpInterceptor {
         console.log('📦 Sending refresh token in Authorization header');
 
         // Enviar el refresh token en el header Authorization
-        this.http.post<any>('http://localhost:8000/api/auth/refresh', {}, {
+        this.http.post<any>(`${environment.apiUrl}/api/auth/refresh`, {}, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${refreshToken}`
