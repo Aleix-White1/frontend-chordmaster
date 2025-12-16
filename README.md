@@ -184,6 +184,9 @@ src/
    - Verifica que el enlace sea válido
    - Comprueba la conexión a internet
 
+4. **Configuración entorno .env IP:**
+   - Verifica que las variables de entorno del proyecto apuntan a tu IP
+
 ## 📞 Soporte
 
 Si encuentras algún problema o tienes sugerencias:
